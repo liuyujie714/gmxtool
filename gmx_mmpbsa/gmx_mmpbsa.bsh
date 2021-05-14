@@ -43,8 +43,6 @@ echo -e "\
    2019-12-24: fix bug for small time step
    2019-12-10: fix bug for OPLS force field
    2019-11-17: fix bug for c6, c12 of old version tpr
-   2019-11-06: apbs FILE.apbs &> FILE.out
-               on ubuntu 18.04 may not work, then delete &
    2019-11-03: fix bug for time stamp
    2019-09-19: push to gmxtool
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
@@ -595,7 +593,7 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 			}
 			close(Fout".apbs")
 
-			cmd=apbs" "Fout".apbs &> "Fout".out 2>&1";
+			cmd=apbs" "Fout".apbs > "Fout".out 2>&1";
 			cmd | getline err; close(cmd)
 
 			txt=Fout".out";
