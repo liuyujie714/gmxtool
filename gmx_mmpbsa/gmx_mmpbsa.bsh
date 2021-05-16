@@ -73,7 +73,7 @@ dump="$gmx dump"						# gmx dump
 trjconv="$gmx trjconv -dt 1000"			# gmx trjconv, use -b -e -dt, NOT -skip
 
 #apbs='/path/APBS/bin/apbs'				# APBS(Linux)
-apbs='E:/APBS1.5/apbs.exe'			# APBS(Windows), USE "/", NOT "\"
+apbs='D:/APBS1.5/bin/apbs.exe'			# APBS(Windows), USE "/", NOT "\"
 export MCSH_HOME=/dev/null				# APBS io.mc
 
 pid=pid				# 输出文件($$可免重复) prefix of the output files($$)
@@ -522,6 +522,8 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 		for(fr=1; fr<=Nfrm; fr++) maxstr=max(maxstr, length(Fname[fr]))
 
 		for(fr=1; fr<=Nfrm; fr++) {
+			t_start = systime()
+			fflush("")
 			Fout=Fname[fr]
 			printf "   >> Frame %3d/%d: %-"maxstr"s", fr, Nfrm, Fout
 
@@ -651,7 +653,9 @@ awk -v pid=_$pid          -v qrv=$qrv           -v dt="$dt"     \
 				Fout, Ebi[fr], EbiDH[fr], Emm[fr], EmmDH[fr], Epb[fr], Esa[fr], \
 				Ecou, EcouDH, Evdw, PBcom, PBpro, PBlig, SAcom, SApro, SAlig >> pid"~MMPBSA.dat"
 
-			printf "    MM-PBSA(with DH) =  %9.3f(%9.3f) kJ/mol\n", Ebi[fr],  EbiDH[fr]
+			total_time = (Nfrm-fr)*(systime() - t_start)
+			printf "    MM-PBSA(with DH) =  %9.3f(%9.3f) kJ/mol  [ ~ %4d h %02d min %02d sec ]\n", \
+				Ebi[fr],  EbiDH[fr], int(total_time/3600), int(total_time%3600/60), total_time%60
 
 			fmt="%s%12.3f%s"
 			for(i=1; i<=Nres; i++) {
